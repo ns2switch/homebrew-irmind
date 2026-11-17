@@ -1,5 +1,9 @@
 #!/usr/bin/env bash
 set -euo pipefail
+# All reads in this smoke test are from public repositories and release assets.
+# Avoid consulting workstation-specific credential helpers; no stored credential
+# or global Git setting is changed.
+export GIT_CONFIG_COUNT=1 GIT_CONFIG_KEY_0=credential.helper GIT_CONFIG_VALUE_0='' 
 candidate=${1:?candidate formula required}
 mode=${2:?candidate or published mode required}
 for prefix in /opt/homebrew /usr/local /home/linuxbrew/.linuxbrew; do
