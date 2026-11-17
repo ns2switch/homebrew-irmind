@@ -71,3 +71,5 @@ python3 tools/update.py --tag v0.5.3 --output Formula/irmind.rb
 
 Véase [CONTRIBUTING](CONTRIBUTING.es.md). Nunca sustituyas los hashes por los de otra
 arquitectura ni omitas la verificación de identidad.
+
+Las versiones recientes de Homebrew pueden pedir confianza explícita antes de instalar una fórmula externa. Revisa `Formula/irmind.rb` y, si se solicita, ejecuta `brew trust --formula ns2switch/irmind/irmind`. Las pruebas nativas confían solo en esta fórmula tras autenticarla; no desactivan las comprobaciones de confianza globales.

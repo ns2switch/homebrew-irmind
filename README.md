@@ -76,3 +76,5 @@ python3 tools/update.py --tag v0.5.3 --output Formula/irmind.rb
 
 See [CONTRIBUTING](CONTRIBUTING.md). Do not replace missing hashes with another
 architecture or bypass identity verification.
+
+Recent Homebrew versions may ask you to trust a third-party formula before installation. Inspect `Formula/irmind.rb`, then explicitly run `brew trust --formula ns2switch/irmind/irmind` if requested. The native checks grant trust only to this formula after authenticating the recipe; they do not disable Homebrew trust checks globally.

@@ -18,6 +18,11 @@ case "$mode" in
     ;;
   *) echo 'unsupported smoke-test mode' >&2; exit 1 ;;
 esac
+# Trust only the exact authenticated formula under test on Homebrew versions
+# which require explicit tap trust. Older supported Homebrew needs no grant.
+if brew commands --quiet | awk '$0 == "trust" {found=1} END {exit !found}'; then
+  brew trust --formula ns2switch/irmind/irmind
+fi
 brew audit --strict ns2switch/irmind/irmind
 trap 'brew uninstall ns2switch/irmind/irmind || true' EXIT
 brew install ns2switch/irmind/irmind
