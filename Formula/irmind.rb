@@ -1,8 +1,9 @@
 class Irmind < Formula
   desc "Terminal assistant for incident response and forensic analysis"
   homepage "https://github.com/ns2switch/irmind"
-  version "0.5.3"
   license any_of: ["MIT", "Apache-2.0"]
+
+  # IRMind release: v0.5.3
 
   on_macos do
     on_arm do
@@ -14,9 +15,6 @@ class Irmind < Formula
         sha256 "679b72d1512a1e94e8d2ddac3945b92c09c34d64b671cd5118bf7e540fc97805"
       end
     end
-  end
-
-  on_macos do
     on_intel do
       url "https://github.com/ns2switch/irmind/releases/download/v0.5.3/irmind-macos-x86_64", using: :nounzip
       sha256 "b8522c4baeb232eb7c09f1da48ea56dabf9ba25d811864eff80290eaef8791c5"
@@ -38,9 +36,6 @@ class Irmind < Formula
         sha256 "8ace91cd44ec52a8cd4b2f8e40a89f90a9d255124f677dc948edec036f6ae4ad"
       end
     end
-  end
-
-  on_linux do
     on_intel do
       url "https://github.com/ns2switch/irmind/releases/download/v0.5.3/irmind-linux-x86_64", using: :nounzip
       sha256 "312cefb522f23a2382f8085d93c4fa830565eac0b45a4a410211feb21bc943ce"

@@ -72,23 +72,20 @@ def authenticate(tag, directory):
 def formula(tag, sums):
     version(tag)
     lines = ['class Irmind < Formula', '  desc "Terminal assistant for incident response and forensic analysis"',
-             '  homepage "https://github.com/ns2switch/irmind"', f'  version "{tag[1:]}"',
-             '  license any_of: ["MIT", "Apache-2.0"]', '']
-    supported = []
-    for system, cpu, asset in PLATFORMS:
-        main, helper = 'irmind-' + asset, 'irmind-evtx-' + asset
-        if main not in sums or helper not in sums:
-            continue
-        if not all(re.fullmatch('[0-9a-f]{64}', sums[name]) for name in (main, helper)):
-            raise ValueError('Invalid artifact hash')
-        supported.append(asset)
-        origin = f'https://github.com/{REPO}/releases/download/{tag}/'
-        lines += [f'  on_{system} do', f'    on_{cpu} do', f'      url "{origin}{main}", using: :nounzip',
-                  f'      sha256 "{sums[main]}"', '', '      resource "irmind-evtx" do',
-                  f'        url "{origin}{helper}", using: :nounzip', f'        sha256 "{sums[helper]}"',
-                  '      end', '    end', '  end', '']
-    if len(supported) != len(PLATFORMS):
-        raise ValueError('An exact release with all macOS/Linux architectures is required')
+             '  homepage "https://github.com/ns2switch/irmind"',
+             '  license any_of: ["MIT", "Apache-2.0"]', '', f'  # IRMind release: {tag}', '']
+    for system in ('macos', 'linux'):
+        lines.append(f'  on_{system} do')
+        for _, cpu, asset in (row for row in PLATFORMS if row[0] == system):
+            main, helper = 'irmind-' + asset, 'irmind-evtx-' + asset
+            if not all(name in sums and re.fullmatch('[0-9a-f]{64}', sums[name]) for name in (main, helper)):
+                raise ValueError('Exact release hashes for every main/helper architecture are required')
+            origin = f'https://github.com/{REPO}/releases/download/{tag}/'
+            lines += [f'    on_{cpu} do', f'      url "{origin}{main}", using: :nounzip',
+                      f'      sha256 "{sums[main]}"', '', '      resource "irmind-evtx" do',
+                      f'        url "{origin}{helper}", using: :nounzip', f'        sha256 "{sums[helper]}"',
+                      '      end', '    end']
+        lines += ['  end', '']
     lines += ['  def install', '    bin.install Dir["irmind-*"].fetch(0) => "irmind"',
               '    resource("irmind-evtx").stage do',
               '      bin.install Dir["irmind-evtx-*"].fetch(0) => "irmind-evtx"',
@@ -111,7 +108,7 @@ def main():
     def formula_tag(path):
         if path.stat().st_size > 64_000:
             raise ValueError('Formula exceeds its bound')
-        found = re.findall(r'^  version "([0-9]+\.[0-9]+\.[0-9]+)"$', path.read_text(encoding='utf-8'), re.M)
+        found = re.findall(r'^  # IRMind release: v([0-9]+\.[0-9]+\.[0-9]+)$', path.read_text(encoding='utf-8'), re.M)
         if len(found) != 1:
             raise ValueError('Formula must declare one exact version')
         return 'v' + found[0]

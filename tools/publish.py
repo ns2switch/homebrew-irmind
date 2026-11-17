@@ -26,7 +26,7 @@ def main():
     path = Path(sys.argv[1])
     if path.stat().st_size > 64_000: raise ValueError('Formula exceeds its bound')
     content = path.read_bytes()
-    match = re.search(rb'^  version "([0-9]+\.[0-9]+\.[0-9]+)"$', content, re.M)
+    match = re.search(rb'^  # IRMind release: v([0-9]+\.[0-9]+\.[0-9]+)$', content, re.M)
     if not match: raise ValueError('No exact version in tested formula')
     parent = api(f'repos/{repo}/git/commits/{expected}')
     blob = api(f'repos/{repo}/git/blobs', 'POST',
