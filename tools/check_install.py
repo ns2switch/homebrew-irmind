@@ -26,7 +26,8 @@ for name in ('irmind', 'irmind-evtx'):
         raise SystemExit('Installed bytes do not match the authenticated release checksum')
     result[name + '_sha256_matches'] = True
     if sys.platform == 'darwin':
-        if 'com.apple.quarantine' in os.listxattr(binary):
+        attributes = subprocess.run(['/usr/bin/xattr', str(binary)], capture_output=True, text=True, check=True, timeout=10).stdout.splitlines()
+        if 'com.apple.quarantine' in attributes:
             raise SystemExit('Homebrew payload unexpectedly has com.apple.quarantine; not removed')
         result[name + '_quarantine_absent'] = True
 version = subprocess.run([str(args.bin / 'irmind'), '--version'], text=True,
