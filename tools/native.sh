@@ -25,7 +25,7 @@ if brew commands --quiet | awk '$0 == "trust" {found=1} END {exit !found}'; then
 fi
 brew audit --strict ns2switch/irmind/irmind
 trap 'brew uninstall ns2switch/irmind/irmind || true' EXIT
-brew install ns2switch/irmind/irmind
+brew install --verbose --debug ns2switch/irmind/irmind
 brew test ns2switch/irmind/irmind
 irmind --version
 python3 tools/check_install.py "$(brew --prefix irmind)/bin" --formula "$candidate"
