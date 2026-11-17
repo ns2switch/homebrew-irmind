@@ -1,0 +1,29 @@
+#!/usr/bin/env bash
+set -euo pipefail
+candidate=${1:?candidate formula required}
+mode=${2:?candidate or published mode required}
+for prefix in /opt/homebrew /usr/local /home/linuxbrew/.linuxbrew; do
+  if test -x "$prefix/bin/brew"; then export PATH="$prefix/bin:$PATH"; break; fi
+done
+command -v brew
+brew tap ns2switch/irmind
+tap=$(brew --repository ns2switch/irmind)
+case "$mode" in
+  candidate)
+    mkdir -p "$tap/Formula"
+    cp "$candidate" "$tap/Formula/irmind.rb"
+    ;;
+  published)
+    cmp "$candidate" "$tap/Formula/irmind.rb"
+    ;;
+  *) echo 'unsupported smoke-test mode' >&2; exit 1 ;;
+esac
+brew audit --strict ns2switch/irmind/irmind
+trap 'brew uninstall ns2switch/irmind/irmind || true' EXIT
+brew install ns2switch/irmind/irmind
+brew test ns2switch/irmind/irmind
+irmind --version
+python3 tools/check_install.py "$(brew --prefix irmind)/bin" --formula "$candidate"
+python3 tools/demo_pty.py "$(brew --prefix irmind)/bin/irmind"
+brew uninstall ns2switch/irmind/irmind
+trap - EXIT
