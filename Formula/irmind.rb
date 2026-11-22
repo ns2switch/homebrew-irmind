@@ -3,46 +3,46 @@ class Irmind < Formula
   homepage "https://github.com/ns2switch/irmind"
   license any_of: ["MIT", "Apache-2.0"]
 
-  # IRMind release: v0.6.0
+  # IRMind release: v0.6.1
 
   on_macos do
     on_arm do
-      url "https://github.com/ns2switch/irmind/releases/download/v0.6.0/irmind-macos-aarch64", using: :nounzip
-      sha256 "910143e5f81d9b2be0ebd0fcfe46f6906c2e4bbf4c48ab36d1dcd3b30fce581e"
+      url "https://github.com/ns2switch/irmind/releases/download/v0.6.1/irmind-macos-aarch64", using: :nounzip
+      sha256 "61808c160000dc0b62aaa4ec94ba4f697e49089ae0349f9d67a7754f262860ee"
 
       resource "irmind-evtx" do
-        url "https://github.com/ns2switch/irmind/releases/download/v0.6.0/irmind-evtx-macos-aarch64", using: :nounzip
-        sha256 "25945c727a295be0db7070c3419bdc0e03dcba02e7cde575c3853da897b2f06b"
+        url "https://github.com/ns2switch/irmind/releases/download/v0.6.1/irmind-evtx-macos-aarch64", using: :nounzip
+        sha256 "3a3f535b816d714295322e8dcc5fab3669922a008a9dc47610abae12b6510089"
       end
     end
     on_intel do
-      url "https://github.com/ns2switch/irmind/releases/download/v0.6.0/irmind-macos-x86_64", using: :nounzip
-      sha256 "ad099d153d2407166ccb93a6ccec87c8c484cac9b2f17fa2f1b66535a8752d83"
+      url "https://github.com/ns2switch/irmind/releases/download/v0.6.1/irmind-macos-x86_64", using: :nounzip
+      sha256 "6f8a901e548a44d0e2e63b314c377aac9eb7b7a1d3e0a6ccb854896c58ef7dd1"
 
       resource "irmind-evtx" do
-        url "https://github.com/ns2switch/irmind/releases/download/v0.6.0/irmind-evtx-macos-x86_64", using: :nounzip
-        sha256 "8859eaf4649c34954ffe29769cefbf841e128f309ba39be1650b1ab5a6b84f61"
+        url "https://github.com/ns2switch/irmind/releases/download/v0.6.1/irmind-evtx-macos-x86_64", using: :nounzip
+        sha256 "4e7b2dcbd52ae0ebd8013ec0dabda1373972283684ab78e06ea7368ecc03e25d"
       end
     end
   end
 
   on_linux do
     on_arm do
-      url "https://github.com/ns2switch/irmind/releases/download/v0.6.0/irmind-linux-aarch64", using: :nounzip
-      sha256 "fc5f7a196e50df39cf49fa9e8b37c102791656946bceb2975eac9dd7a9ffaf7c"
+      url "https://github.com/ns2switch/irmind/releases/download/v0.6.1/irmind-linux-aarch64", using: :nounzip
+      sha256 "c145d7bd06539e0fc64aa464f8ecaf3cb565aa2e1a7b3a6cac91e93ac9f35656"
 
       resource "irmind-evtx" do
-        url "https://github.com/ns2switch/irmind/releases/download/v0.6.0/irmind-evtx-linux-aarch64", using: :nounzip
-        sha256 "1b95a165dae3cdd8f06f941e4d9259a058c4e8f34175cf898a10b2d767b25e69"
+        url "https://github.com/ns2switch/irmind/releases/download/v0.6.1/irmind-evtx-linux-aarch64", using: :nounzip
+        sha256 "0fe136ffe772896455b2885f44b5da226640d68211572b26ab3cce4458661e18"
       end
     end
     on_intel do
-      url "https://github.com/ns2switch/irmind/releases/download/v0.6.0/irmind-linux-x86_64", using: :nounzip
-      sha256 "0901576065a059e0233ec1af722d1af02799fb87dd0007236aec9b81b43f85fb"
+      url "https://github.com/ns2switch/irmind/releases/download/v0.6.1/irmind-linux-x86_64", using: :nounzip
+      sha256 "066c1fbdd2626278ef3591b3575ab7d6662f44ecb70a7e4dd2943d9dd02bafa0"
 
       resource "irmind-evtx" do
-        url "https://github.com/ns2switch/irmind/releases/download/v0.6.0/irmind-evtx-linux-x86_64", using: :nounzip
-        sha256 "0385af7c5387640f9e13cdb2514f82838e1c19b8e6bfef1192a74a28cec6b177"
+        url "https://github.com/ns2switch/irmind/releases/download/v0.6.1/irmind-evtx-linux-x86_64", using: :nounzip
+        sha256 "0b29600c85621fffc6d4a19e1513224e8e33d5fe9eebb766418749db5f6281ad"
       end
     end
   end
