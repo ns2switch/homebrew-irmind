@@ -29,19 +29,23 @@ def version(tag):
     return tuple(map(int, tag[1:].split('.')))
 
 
+def stable_tag(record, requested=None):
+    if not isinstance(record, dict) or record.get('draft') is not False or record.get('prerelease') is not False:
+        raise ValueError('Homebrew requires a published stable IRMind release')
+    tag = record.get('tag_name')
+    version(tag)
+    if requested is not None and tag != requested:
+        raise ValueError('GitHub returned a different release tag')
+    return tag
+
+
+def require_published_stable(tag):
+    version(tag)
+    return stable_tag(json.loads(run(['gh', 'api', f'repos/{REPO}/releases/tags/{tag}'])), tag)
+
+
 def latest():
-    records = json.loads(run(['gh', 'api', f'repos/{REPO}/releases?per_page=100']))
-    candidates = []
-    for record in records:
-        if record.get('draft'):
-            continue
-        try:
-            candidates.append((version(record['tag_name']), record['tag_name']))
-        except (ValueError, KeyError):
-            continue
-    if not candidates:
-        raise ValueError('No published numeric release found')
-    return max(candidates)[1]
+    return stable_tag(json.loads(run(['gh', 'api', f'repos/{REPO}/releases/latest'])))
 
 
 def checksums(text):
@@ -115,6 +119,8 @@ def main():
     tag = args.tag or (formula_tag(args.check_source) if args.check_source else latest())
     if args.minimum_formula and version(tag) < version(formula_tag(args.minimum_formula)):
         raise ValueError('Refusing to downgrade the tap')
+    if args.tag:
+        require_published_stable(tag)
     with tempfile.TemporaryDirectory(prefix='irmind-tap-') as temporary:
         output = formula(tag, authenticate(tag, Path(temporary)))
     if args.check_source and args.check_source.read_text(encoding='utf-8') != output:
