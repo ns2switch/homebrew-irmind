@@ -48,7 +48,7 @@ Developer ID signing, notarization or interactive browser-download validation.
 
 ## Release automation
 
-`update.yml` accepts an exact numeric release tag through `workflow_dispatch`.
+`update.yml` accepts an exact tag for a published stable release through `workflow_dispatch`.
 IRMind dispatches it after publishing a tag, using `HOMEBREW_TAP_TOKEN` from its
 protected `release` environment. That cross-repository token needs Actions write
 access to this tap; it does not publish formula contents.
@@ -61,17 +61,17 @@ the authenticated candidate. No scheduled update or source-build fallback runs.
 Pull-request recipes must match the authenticated renderer byte for byte before
 Homebrew evaluates them. Pull requests cannot publish updates.
 
-For an explicit rehearsal against an existing release:
+Set STABLE_TAG to an exact published stable version before dispatching:
 
 ```sh
-gh workflow run update.yml -R ns2switch/homebrew-irmind --ref main -f tag=v0.5.3
+gh workflow run update.yml -R ns2switch/homebrew-irmind --ref main -f tag="$STABLE_TAG"
 ```
 
 For development, install Python 3.11+, `gh` and cosign 3.1.4 or newer:
 
 ```sh
 python3 -B tools/test_update.py
-python3 tools/update.py --tag v0.5.3 --output Formula/irmind.rb
+python3 tools/update.py --tag "$STABLE_TAG" --output Formula/irmind.rb
 ```
 
 See [CONTRIBUTING](CONTRIBUTING.md). Do not replace missing hashes with another

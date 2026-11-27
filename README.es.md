@@ -46,7 +46,7 @@ navegador con cuarentena.
 
 ## Automatización
 
-`update.yml` recibe un tag numérico exacto mediante `workflow_dispatch`. IRMind lo
+`update.yml` recibe la etiqueta exacta de una versión estable publicada mediante `workflow_dispatch`. IRMind lo
 invoca tras publicar una etiqueta usando `HOMEBREW_TAP_TOKEN` desde su environment
 protegido `release`. Ese token necesita Actions write en el tap, no publica la
 fórmula. Los jobs de lectura autentican y prueban la candidata. Un job separado
@@ -56,17 +56,17 @@ Las PR no publican y su fórmula debe coincidir byte a byte con la receta
 regenerada desde los hashes autenticados. No hay actualización programada ni
 alternativa de compilación desde código.
 
-Ensayo explícito con una release existente:
+Asigna a STABLE_TAG una etiqueta estable publicada antes de lanzar el workflow:
 
 ```sh
-gh workflow run update.yml -R ns2switch/homebrew-irmind --ref main -f tag=v0.5.3
+gh workflow run update.yml -R ns2switch/homebrew-irmind --ref main -f tag="$STABLE_TAG"
 ```
 
 Desarrollo: Python 3.11+, `gh` y cosign 3.1.4 o posterior:
 
 ```sh
 python3 -B tools/test_update.py
-python3 tools/update.py --tag v0.5.3 --output Formula/irmind.rb
+python3 tools/update.py --tag "$STABLE_TAG" --output Formula/irmind.rb
 ```
 
 Véase [CONTRIBUTING](CONTRIBUTING.es.md). Nunca sustituyas los hashes por los de otra

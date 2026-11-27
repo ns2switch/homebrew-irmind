@@ -37,9 +37,26 @@ class FormulaTests(unittest.TestCase):
             self.assertIn(update.WORKFLOW+'v0.5.3',command)
             self.assertIn('https://token.actions.githubusercontent.com',command)
 
-    def test_latest_includes_published_prereleases_and_excludes_drafts(self):
-        with patch.object(update,'run',return_value='[{"tag_name":"v0.5.3","draft":false,"prerelease":true},{"tag_name":"v0.6.0","draft":true}]'):
-            self.assertEqual(update.latest(),'v0.5.3')
+    def test_latest_uses_the_stable_endpoint(self):
+        with patch.object(update, 'run', return_value='{"tag_name":"v0.8.0","draft":false,"prerelease":false}') as call:
+            self.assertEqual(update.latest(), 'v0.8.0')
+        call.assert_called_once_with(['gh', 'api', 'repos/ns2switch/irmind/releases/latest'])
+
+    def test_exact_tag_rejects_preliminary_draft_missing_and_mismatched_metadata(self):
+        for record in (
+            '{"tag_name":"v0.8.0","draft":false,"prerelease":true}',
+            '{"tag_name":"v0.8.0","draft":true,"prerelease":false}',
+            '{"tag_name":"v0.8.0","draft":false}',
+            '{"tag_name":"v0.8.1","draft":false,"prerelease":false}',
+        ):
+            with self.subTest(record=record), patch.object(update, 'run', return_value=record):
+                with self.assertRaises(ValueError):
+                    update.require_published_stable('v0.8.0')
+        for tag in ('v0.8.0-alpha.1', 'v0.8.0-beta', 'v0.8.0-rc.1'):
+            with self.subTest(tag=tag), patch.object(update, 'run') as call:
+                with self.assertRaises(ValueError):
+                    update.require_published_stable(tag)
+                call.assert_not_called()
 
     def test_source_formula_must_equal_authenticated_recipe(self):
         with tempfile.TemporaryDirectory() as temporary:

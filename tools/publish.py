@@ -7,6 +7,8 @@ import re
 import subprocess
 import sys
 
+from update import require_published_stable
+
 
 def api(path, method='GET', payload=None):
     args = ['gh', 'api', path, '--method', method]
@@ -28,6 +30,7 @@ def main():
     content = path.read_bytes()
     match = re.search(rb'^  # IRMind release: v([0-9]+\.[0-9]+\.[0-9]+)$', content, re.M)
     if not match: raise ValueError('No exact version in tested formula')
+    require_published_stable('v' + match[1].decode('ascii'))
     parent = api(f'repos/{repo}/git/commits/{expected}')
     blob = api(f'repos/{repo}/git/blobs', 'POST',
                {'content': base64.b64encode(content).decode(), 'encoding': 'base64'})
